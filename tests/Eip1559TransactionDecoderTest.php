@@ -18,36 +18,36 @@ final class Eip1559TransactionDecoderTest extends TestCase
 
         $result = $decoder->decode(self::VALID_RAW_TRANSACTION);
 
-        $this->assertSame('0x2', $result['type']);
-        $this->assertMatchesRegularExpression('/^0x[0-9a-f]{40}$/', $result['from']);
-        $this->assertSame('0xfe00abd4079a8c1692f258a1ecfc7c60a4497ecd', $result['from']);
+        $this->assertSame('0x2', $result->type);
+        $this->assertMatchesRegularExpression('/^0x[0-9a-f]{40}$/', $result->from);
+        $this->assertSame('0xfe00abd4079a8c1692f258a1ecfc7c60a4497ecd', $result->from);
         $this->assertSame(
             '0x3fcb84218659810319cceef5d58073b8aba97948646c7e52dadd5a41cc918035',
-            $result['hash']
+            $result->hash
         );
-        $this->assertSame('0x539', $result['chainId']);
-        $this->assertSame('0x0', $result['nonce']);
-        $this->assertSame('0x3b9aca00', $result['maxPriorityFeePerGas']);
-        $this->assertSame('0x77359400', $result['maxFeePerGas']);
-        $this->assertSame('0x5208', $result['gas']);
-        $this->assertSame('0x1111111111111111111111111111111111111111', $result['to']);
-        $this->assertSame('0x2386f26fc10000', $result['value']);
-        $this->assertSame('0x', $result['input']);
-        $this->assertSame([], $result['accessList']);
-        $this->assertSame('0x1', $result['yParity']);
+        $this->assertSame('0x539', $result->chainId);
+        $this->assertSame('0x0', $result->nonce);
+        $this->assertSame('0x3b9aca00', $result->maxPriorityFeePerGas);
+        $this->assertSame('0x77359400', $result->maxFeePerGas);
+        $this->assertSame('0x5208', $result->gas);
+        $this->assertSame('0x1111111111111111111111111111111111111111', $result->to);
+        $this->assertSame('0x2386f26fc10000', $result->value);
+        $this->assertSame('0x', $result->input);
+        $this->assertSame([], $result->accessList);
+        $this->assertSame('0x1', $result->yParity);
         $this->assertSame(
             '0x4e811a9d1a526bcfb808dfbe9f4d287175399cf0078865e16205c593d14b8fa8',
-            $result['r']
+            $result->r
         );
         $this->assertSame(
             '0x578959440e638ed98f6f4aaefd23536b25a091fffcbae55c9a239dbdf74ba672',
-            $result['s']
+            $result->s
         );
         $this->assertSame(
             '0xf450acd5cfdc33f6d7df043664de6da22a55d58f29be9f01d10b353f045ebf65',
-            $result['signingHash']
+            $result->signingHash
         );
-        $this->assertSame(self::VALID_RAW_TRANSACTION, $result['raw']);
+        $this->assertSame(self::VALID_RAW_TRANSACTION, $result->raw);
     }
 
     public function testThrowsOnEmptyTransaction(): void

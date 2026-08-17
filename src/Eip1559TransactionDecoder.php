@@ -16,7 +16,7 @@ final class Eip1559TransactionDecoder
         '7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0';
 
 
-    public function decode(string $rawTransaction): array
+    public function decode(string $rawTransaction): Eip1559Transaction
     {
         $hex = $this->stripHexPrefix($rawTransaction);
 
@@ -145,38 +145,35 @@ final class Eip1559TransactionDecoder
 
         $transactionHash = '0x' . Keccak::hash($raw, 256);
 
-        return [
-            'type' => '0x2',
-            'hash' => strtolower($transactionHash),
-            'from' => strtolower($from),
+        return new Eip1559Transaction(
+            type: '0x2',
+            hash: strtolower($transactionHash),
+            from: strtolower($from),
 
-            'chainId' => $this->quantityToHex($chainId),
-            'nonce' => $this->quantityToHex($nonce),
+            chainId: $this->quantityToHex($chainId),
+            nonce: $this->quantityToHex($nonce),
 
-            'maxPriorityFeePerGas' =>
-                $this->quantityToHex($maxPriorityFeePerGas),
+            maxPriorityFeePerGas: $this->quantityToHex($maxPriorityFeePerGas),
+            maxFeePerGas: $this->quantityToHex($maxFeePerGas),
 
-            'maxFeePerGas' =>
-                $this->quantityToHex($maxFeePerGas),
+            gas: $this->quantityToHex($gasLimit),
 
-            'gas' => $this->quantityToHex($gasLimit),
-
-            'to' => $destination === ''
+            to: $destination === ''
                 ? null
                 : '0x' . bin2hex($destination),
 
-            'value' => $this->quantityToHex($amount),
-            'input' => '0x' . bin2hex($data),
+            value: $this->quantityToHex($amount),
+            input: '0x' . bin2hex($data),
 
-            'accessList' => $this->formatAccessList($accessList),
+            accessList: $this->formatAccessList($accessList),
 
-            'yParity' => '0x' . dechex($yParityInt),
-            'r' => '0x' . $this->leftPadTo32Bytes($r, 'r'),
-            's' => '0x' . $this->leftPadTo32Bytes($s, 's'),
+            yParity: '0x' . dechex($yParityInt),
+            r: '0x' . $this->leftPadTo32Bytes($r, 'r'),
+            s: '0x' . $this->leftPadTo32Bytes($s, 's'),
 
-            'signingHash' => '0x' . $signingHash,
-            'raw' => '0x' . $hex,
-        ];
+            signingHash: '0x' . $signingHash,
+            raw: '0x' . $hex,
+        );
     }
 
     private function stripHexPrefix(string $value): string
@@ -556,19 +553,22 @@ final class Eip1559TransactionDecoder
         }
     }
 
+    /**
+     * @return AccessListEntry[]
+     */
     private function formatAccessList(array $accessList): array
     {
         return array_map(
-            static function (array $entry): array {
+            static function (array $entry): AccessListEntry {
                 [$address, $storageKeys] = $entry;
 
-                return [
-                    'address' => '0x' . bin2hex($address),
-                    'storageKeys' => array_map(
+                return new AccessListEntry(
+                    address: '0x' . bin2hex($address),
+                    storageKeys: array_map(
                         static fn(string $key): string => '0x' . bin2hex($key),
                         $storageKeys
                     ),
-                ];
+                );
             },
             $accessList
         );
