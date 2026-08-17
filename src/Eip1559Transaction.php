@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Reynevan\Web3;
 
-final readonly class Eip1559Transaction
+final class Eip1559Transaction
 {
     /**
      * @param AccessListEntry[] $accessList
